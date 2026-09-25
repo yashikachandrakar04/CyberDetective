@@ -1,97 +1,307 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 🕵️ Cyber Detective
 
-# Getting Started
+> A terminal-themed detective game built with React Native CLI. Analyze clues, crack cases, buy hints, and chase perfect solve times across 10+ cyber-crime investigations.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+![React Native](https://img.shields.io/badge/React_Native-0.73+-61DAFB?logo=react&logoColor=white)
+![Platform](https://img.shields.io/badge/Platform-iOS%20%7C%20Android-lightgrey)
+![License](https://img.shields.io/badge/License-MIT-green)
+![Status](https://img.shields.io/badge/Status-Active-00ff9f)
 
-## Step 1: Start Metro
+---
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## 📖 Table of Contents
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Installation](#-installation)
+- [Project Structure](#-project-structure)
+- [Gameplay](#-gameplay)
+- [Scoring System](#-scoring-system)
+- [Achievements](#-achievements)
+- [Daily Case](#-daily-case)
+- [Customization](#-customization)
+- [Roadmap](#-roadmap)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Author](#-author)
 
-```sh
-# Using npm
-npm start
+---
 
-# OR using Yarn
-yarn start
+## ✨ Features
+
+- 🎯 **10+ handcrafted cases** — phishing, ransomware, deepfakes, crypto heists, insider threats
+- ⏱️ **Per-case timer** — solve fast or the suspect escapes
+- 💡 **Hint system** — spend credits to unlock clues, but hints reduce your payout
+- 🏁 **Personal leaderboard** — ranks your solves by fastest time with medals
+- 🏅 **12 achievements** — auto-tracked, persisted, and unlocked with popups
+- 📅 **Daily case** — a new deterministic case each day with +50% reward bonus
+- 🔥 **Daily streaks** — build a streak, chase the best-streak record
+- 💾 **AsyncStorage persistence** — credits, solved cases, best times, streaks all survive restarts
+- 🖥️ **Cyberpunk terminal UI** — deep navy + neon green, monospace font throughout
+- 📱 **Fully offline** — no backend required
+
+---
+
+> Add your own screenshots here.
+> Suggested folder: `/docs/screenshots/`
+
+|
+
+## 🛠 Tech Stack
+
+| Layer | Tech |
+|---|---|
+| Framework | React Native CLI |
+| Navigation | `@react-navigation/native` + `@react-navigation/stack` |
+| Persistence | `@react-native-async-storage/async-storage` |
+| Native deps | `react-native-screens`, `react-native-safe-area-context`, `react-native-gesture-handler` |
+| Language | JavaScript (ES2020+) |
+| Fonts | System monospace |
+
+---
+
+## 🚀 Installation
+
+### Prerequisites
+
+- Node.js ≥ 18
+- React Native CLI environment set up ([official guide](https://reactnative.dev/docs/environment-setup))
+- Xcode (iOS) or Android Studio (Android)
+
+### Clone & Install
+
+```bash
+git clone https://github.com/yashikachandrakar04/CyberDetective.git
+cd CyberDetective
+npm install
 ```
 
-## Step 2: Build and run your app
+### Install Dependencies (single line)
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
+```bash
+npm install @react-navigation/native @react-navigation/stack react-native-screens react-native-safe-area-context react-native-gesture-handler react-native-vector-icons @react-native-async-storage/async-storage
 ```
 
-### iOS
+### iOS Pods
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
+```bash
+cd ios && pod install && cd ..
 ```
 
-Then, and every time you update your native dependencies, run:
+### Run
 
-```sh
-bundle exec pod install
+```bash
+# Android
+npx react-native run-android
+
+# iOS (macOS only)
+npx react-native run-ios
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+### ⚠️ Important — `index.js` Patch
 
-```sh
-# Using npm
-npm run ios
+Add this line at the **very top** of `index.js`:
 
-# OR using Yarn
-yarn ios
+```javascript
+import 'react-native-gesture-handler';
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+---
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+## 📂 Project Structure
 
-## Step 3: Modify your app
+```
+CyberDetective/
+├── index.js
+├── App.tsx
+├── src/
+│   ├── data/
+│   │   ├── cases.jsx                 # 10 base cases
+│   │   └── achievements.jsx          # 12 achievement definitions
+│   ├── hooks/
+│   │   └── useGameState.jsx          # global state + persistence
+│   ├── utils/
+│   │   ├── storage.jsx              # AsyncStorage wrapper (v2 schema)
+│   │   └── dailyCase.jsx            # deterministic daily case + streak
+│   ├── styles/
+│   │   └── theme.jsx                # design tokens
+│   ├── components/
+│   │   ├── CaseCard.js
+│   │   ├── ClueCard.jsx
+│   │   ├── Timer.jsx
+│   └── screens/
+|
+```
 
-Now that you have successfully run the app, let's make changes!
+---
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+## 🎮 Gameplay
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+1. **Home** — pick any open case, or jump into the **Daily Case**, **Leaderboard**, or **Achievements**
+2. **Case** — read the brief, tap clues to inspect them in a terminal view, buy a hint if stuck
+3. **Timer** — every case has a countdown; hit 0 and the case fails
+4. **Accuse** — select a suspect and submit
+5. **Result** — instant verdict with payout breakdown (base + time bonus − hint penalty)
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+### Controls
 
-## Congratulations! :tada:
+| Action | Gesture |
+|---|---|
+| Open case | Tap the case card |
+| View clue | Tap the clue row |
+| Buy hint | Tap 💡 HINT |
+| Accuse | Tap ⚖️ MAKE ACCUSATION |
+| Reset all progress | Long-press RESET at bottom of Home |
 
-You've successfully run and modified your React Native App. :partying_face:
+---
 
-### Now what?
+## 💰 Scoring System
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+Every correct accusation pays out:
 
-# Troubleshooting
+```
+payout = base_reward
+       + round(base_reward × 0.5 × (1 − elapsed / timeLimit))   ← time bonus
+       − (hints_used × round(base_reward × 0.1))                ← hint penalty
+```
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+| Case Difficulty | Base Reward | Time Limit |
+|---|---|---|
+| 🟢 EASY | 500–700 | 150–180 s |
+| 🟡 MEDIUM | 1,000–1,500 | 240 s |
+| 🔴 HARD | 2,500–3,500 | 300–360 s |
+| 📅 DAILY | base × 1.5 | base × 0.75 |
 
-# Learn More
+**Perfect solve** = no hints + finish under half the time limit.
 
-To learn more about React Native, take a look at the following resources:
+---
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+## 🏅 Achievements
+
+All 12 unlock automatically — no manual checks.
+
+| Icon | Title | How to Unlock |
+|---|---|---|
+| 🎯 | First Contact | Solve your first case |
+| 🕵️ | Field Agent | Solve 3 cases |
+| 🏆 | Cyber Legend | Solve all base cases |
+| 🧠 | Pure Logic | Solve 5 cases with no hints |
+| ⚡ | Fast Hands | Solve any case in under 30 s |
+| 🚀 | Speedster | Solve any case in under 15 s |
+| 💎 | Flawless | 3 perfect solves |
+| 💰 | Well Funded | Reach 5,000 credits |
+| 💸 | Cyber Tycoon | Reach 15,000 credits |
+| 🔥 | On a Roll | 3-day daily streak |
+| ☄️ | Unstoppable | 7-day daily streak |
+| 📅 | Daily Grinder | Complete 5 daily cases |
+
+---
+
+## 📅 Daily Case
+
+- Every calendar day generates one case using a **deterministic FNV-1a hash** of today's date — every player sees the same case
+- **+50% reward bonus**, **25% shorter timer**
+- One attempt per day; already-played days show your result
+- **Streak** increments if you played yesterday, resets to 1 if you skipped a day
+- Best streak is tracked permanently
+
+---
+
+## 🎨 Customization
+
+### Add a New Case
+
+Open `src/data/cases.js` and append:
+
+```javascript
+{
+  id: 11,
+  title: 'Your Case Title',
+  difficulty: 'MEDIUM',           // EASY | MEDIUM | HARD
+  reward: 1500,
+  timeLimit: 240,                 // seconds
+  hintCost: 100,                  // credits
+  hint: 'A nudge that costs credits.',
+  brief: 'Short mission description.',
+  clues: [
+    { id: 'c1', icon: '📧', title: 'Clue Title', content: 'Multi-line\nclue text.' },
+    // ...
+  ],
+  suspects: ['Suspect A', 'Suspect B', 'Suspect C'],
+  answer: 'Suspect B',
+  explanation: 'Why the answer is correct.',
+}
+```
+
+### Add a New Achievement
+
+Open `src/data/achievements.js`:
+
+```javascript
+{
+  id: 'my_achievement',
+  icon: '🎖️',
+  title: 'Custom Title',
+  description: 'What the player needs to do.',
+  check: (state, ctx) => state.solved && Object.keys(state.solved).length >= 5,
+}
+```
+
+### Theme
+
+All colors, spacing, radii, and font sizes live in `src/styles/theme.js`. Change `theme.primary` to re-skin the entire app instantly.
+
+---
+
+## 🗺 Roadmap
+
+- [x] Base case flow (Home → Case → Clue → Result)
+- [x] AsyncStorage persistence
+- [x] Timer per case
+- [x] Hint system with credit cost
+- [x] Personal leaderboard
+- [x] Achievements
+- [x] Daily case + streaks
+- [ ] Profile stats screen
+- [ ] Global leaderboard (Firebase)
+- [ ] Push notifications for daily reminders
+- [ ] Sound effects & haptics
+- [ ] Multiplayer co-op cases
+- [ ] Dark/light theme toggle
+- [ ] Case editor / JSON import
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repo
+2. Create a feature branch: `git checkout -b feature/my-case`
+3. Commit: `git commit -m "Add new ransomware case"`
+4. Push: `git push origin feature/my-case`
+5. Open a Pull Request
+
+**New cases are always welcome!** Submit them as a single JSON object in `src/data/cases.js`.
+
+---
+
+## 📄 License
+
+MIT © 2026
+
+---
+
+## Author
+
+**Yashika**
+[https://github.com/yashikachandrakar04/CyberDetective](https://github.com/yashikachandrakar04/CyberDetective)
+
+---
+
+## 🙏 Acknowledgments
+
+- Inspired by classic detective games, cyberpunk aesthetics, and terminal UIs
+- Built with [React Native](https://reactnative.dev) and [React Navigation](https://reactnavigation.org)
+
+---
+
+<p align="center"><b>🕵️ Stay sharp, Detective.</b></p>
