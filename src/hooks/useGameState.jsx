@@ -21,7 +21,7 @@ export default function useGameState() {
     if (!ready) return;
     saveState(state);
 
-    const newly = checkAchievements(state, { totalCases: cases.length });
+    const newly = checkAchievements(state, { totalCases: cases.length , cases, });
     if (newly.length) {
       setState((prev) => {
         const unlocked = { ...prev.unlockedAchievements };
